@@ -2,7 +2,7 @@
   "name": "bot",
   "version": "1.0.0",
   "description": "",
-  "main": "save.js",
+  "main": "index.js",
   "dependencies": {
     "alchemy-sdk": "^2.2.3",
     "dotenv": "^16.0.1",
