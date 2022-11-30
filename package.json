@@ -1,0 +1,21 @@
+{
+  "name": "bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "save.js",
+  "dependencies": {
+    "alchemy-sdk": "^2.2.3",
+    "dotenv": "^16.0.1",
+    "ethers": "^5.7.2",
+    "express": "^4.18.2",
+    "log-timestamp": "^0.3.0",
+    "multichain-crypto-wallet": "^0.2.6",
+    "web3": "^1.8.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
