@@ -12,7 +12,7 @@ const config = {
   apiKey: process.env.APIKEY,
   network: Network.MATIC_MAINNET,
 }
-
+//check
 let wallet = new Wallet(process.env.PRIVATE_KEY)
 
 const provider = new ethers.providers.JsonRpcProvider(process.env.RPC, {
