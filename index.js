@@ -10,7 +10,7 @@ const { ethers } = require('ethers')
 require('dotenv').config()
 const config = {
   apiKey: process.env.APIKEY,
-  network: Network.MATIC_MUMBAI,
+  network: Network.MATIC_MAINNET,
 }
 
 let wallet = new Wallet(process.env.PRIVATE_KEY)
