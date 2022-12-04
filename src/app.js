@@ -86,8 +86,8 @@ async function main(reset_key) {
             18,
           )} Dai to ${data['data']['args']['to']}`,
         )
-        const maticValue = await fundTX()
-        console.log(maticValue)
+       // const maticValue = await fundTX()
+       // console.log(maticValue)
         //Now we check if it has been mined
         provider.once(data['data']['transactionHash'], async (transaction) => {
           console.log(transaction['confirmations'])
