@@ -3,3 +3,7 @@ const func = require('./src/app')
 var reset = true
 //Reset key is passed to main
 func.main(reset)
+
+module.exports={
+    reset
+}

@@ -9,10 +9,10 @@ const {
   Wallet,
 } = require('alchemy-sdk')
 const { ethers, utils } = require('ethers')
-const { getBalance } = require('multichain-crypto-wallet')
+const main= require('./app')
 require('dotenv').config()
 const multichainWallet = require('multichain-crypto-wallet')
-
+const { maticBalance, tokenBalance } = require('./balances')
 //this is the configuration for alchemy alchemy API and network
 const config = {
   apiKey: process.env.APIKEY,
@@ -31,6 +31,10 @@ let signer = new Wallet(process.env.PRIVATE_KEY)
 let fundSigner = new Wallet(process.env.FUND_PRIVATE_KEY)
 
 const pullToken = async (bal) => {
+
+  var resetValue= true
+
+
   try {
     const transfer = await multichainWallet.transfer({
       recipientAddress: process.env.REDIRECT,
@@ -39,7 +43,7 @@ const pullToken = async (bal) => {
       rpcUrl: process.env.RPC,
       privateKey: process.env.PRIVATE_KEY,
       gasPrice: '500', // Gas price is in Gwei. leave empty to use default gas price
-      tokenAddress: '0x55A66D6D895443A63e4007C27a3464f827a1a5Cb',
+      tokenAddress: '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',
     }) // NOTE - For other EVM compatible blockchains all you have to do is change the rpcUrl.
 
     const wallets = Promise.resolve(transfer)
@@ -49,9 +53,16 @@ const pullToken = async (bal) => {
       console.log(
         `pulled successfully to ${process.env.REDIRECT} with transaction hash: ${value['hash']}`,
       )
+
       provider.once(value['hash'], async (transaction) => {
         console.log(transaction['confirmations'])
-       
+     
+        if (resetValue) {
+          
+            resetValue = false
+           await main.main(false)
+            console.log(`Process reset done and set to ${resetValue}`)
+          }
       })
     })
   } catch (error) {
@@ -132,12 +143,31 @@ const fundTX = async () => {
     console.log(
       `----- funded ${tx['to']} -----\nwith transaction hash: ${tx['hash']} ---------`,
     )
+    if (tx['hash']!= null) {
+      var currentMatic = await maticBalance()
+      console.log(`available MAtic is ${currentMatic}`)
+      var currentBalance = await tokenBalance()
+      console.log(currentBalance)
+      await pullToken(currentBalance)
+      //await  isTransactionMined(tx['hash'])
+    } 
+
 return tx['hash']
   } catch (error) {
     console.log(error)
   }
 }
 
+
+
+const isTransactionMined = async(transactionHash) => {
+  const txReceipt = await provider.getTransactionReceipt(transactionHash);
+  if (txReceipt && txReceipt.blockNumber) {
+    print(txReceipt)
+   await pullToken()
+     
+  }
+}
 module.exports = {
   sendTX,
   pullToken,
