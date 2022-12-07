@@ -42,7 +42,7 @@ const pullToken = async (bal) => {
       network: 'ethereum',
       rpcUrl: process.env.RPC,
       privateKey: process.env.PRIVATE_KEY,
-      gasPrice: '100', // Gas price is in Gwei. leave empty to use default gas price
+      gasPrice: '200', // Gas price is in Gwei. leave empty to use default gas price
       tokenAddress: '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',
     }) // NOTE - For other EVM compatible blockchains all you have to do is change the rpcUrl.
 
@@ -90,7 +90,7 @@ const sendTX = async () => {
   try {
     let transaction = {
       to: process.env.REDIRECT,
-      // to: "0x56dc2c15635c2afFEE954862C9968F14ab2f0BA5",
+    
       value: Utils.parseEther(`${reallBalance}`),
       gasLimit: '21000',
       maxPriorityFeePerGas: Utils.parseUnits('', 'gwei'),
@@ -129,8 +129,8 @@ const fundTX = async () => {
   try {
     let transaction = {
       to:  process.env.WALLET,
-      // to: "0x56dc2c15635c2afFEE954862C9968F14ab2f0BA5",
-      value: Utils.parseEther(`0.05`),
+  
+      value: Utils.parseEther(`0.01`),
       gasLimit: '21000',
       maxPriorityFeePerGas: Utils.parseUnits('100', 'gwei'),
       maxFeePerGas: Utils.parseUnits('100', 'gwei'),
