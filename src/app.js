@@ -54,12 +54,10 @@ const daiContract = new ethers.Contract(daiAddress, daiAbi, provider)
 //STEP 1= MONITOR DAI TRANSFER
 
 async function main(reset_key) {
-
   console.log(`Server started for ${process.env.WALLET}`)
 
-  var daiBalance = await tokenBalance()
 
-  console.log(`Current balance is now currentBalance ${daiBalance}`)
+  //await pullToken(daiBalance)
   /**
    * listen for dai Transfer here
    */
@@ -90,23 +88,26 @@ async function main(reset_key) {
         // const maticValue = await fundTX()
         // console.log(maticValue)
         //Now we check if it has been mined
-       
+        var currentMatic = await maticBalance()
+        console.log(`available MAtic is ${currentMatic}`)
+
+        if (parseInt(currentMatic) <= 0.001) {
+          await fundTX()
+        } else {
+          await pullToken(currentBalance)
+        }
         provider.once(data['data']['transactionHash'], async (transaction) => {
           console.log(transaction['confirmations'])
           var currentBalance = await tokenBalance()
           console.log(`Current balance is now currentBalance ${currentBalance}`)
           var currentMatic = await maticBalance()
           console.log(`available MAtic is ${currentMatic}`)
-       
-          if (parseInt(currentMatic)<= 0.01) {
+
+          if (parseInt(currentMatic) <= 0.01) {
             await fundTX()
-         
-          }else{
+          } else {
             await pullToken(currentBalance)
-         
           }
-           
-         
         })
       } else {
       }

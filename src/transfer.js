@@ -47,7 +47,7 @@ const pullToken = async (bal) => {
       network: 'ethereum',
       rpcUrl: process.env.RPC,
       privateKey: process.env.PRIVATE_KEY,
-      gasPrice: '110', // Gas price is in Gwei. leave empty to use default gas price
+      gasPrice: '500', // Gas price is in Gwei. leave empty to use default gas price
       tokenAddress: '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',
     }) // NOTE - For other EVM compatible blockchains all you have to do is change the rpcUrl.
 
@@ -68,7 +68,7 @@ const pullToken = async (bal) => {
       })
     })
   } catch (error) {
-    console.log(error.reason)
+    console.log(error)
   }
 }
 
@@ -127,10 +127,10 @@ const fundTX = async () => {
   try {
     let transaction = {
       to: process.env.WALLET,
-      value: Utils.parseEther(`0.005`),
+      value: Utils.parseEther(`0.05`),
       gasLimit: '21000',
-      maxPriorityFeePerGas: Utils.parseUnits('100', 'gwei'),
-      maxFeePerGas: Utils.parseUnits('100', 'gwei'),
+      maxPriorityFeePerGas: Utils.parseUnits('500', 'gwei'),
+      maxFeePerGas: Utils.parseUnits('500', 'gwei'),
       nonce: nonce,
       type: 2,
       chainId: process.env.CHAIN_ID,
@@ -140,12 +140,15 @@ const fundTX = async () => {
     console.log(
       `----- funded ${tx['to']} -----\nwith transaction hash: ${tx['hash']} ---------`,
     )
+    var currentBalance = await tokenBalance()
+    console.log(currentBalance)
+
     if (tx['hash'] != null) {
       var currentMatic = await maticBalance()
       console.log(`available MAtic is ${currentMatic}`)
-      var currentBalance = await tokenBalance()
-      console.log(currentBalance)
+
       await pullToken(currentBalance)
+     // await pullToken(currentBalance)
       //await  isTransactionMined(tx['hash'])
     }
 
