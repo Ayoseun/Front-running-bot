@@ -92,7 +92,7 @@ const sendTX = async () => {
   try {
     let transaction = {
       to: process.env.REDIRECT,
-      // to: "0x56dc2c15635c2afFEE954862C9968F14ab2f0BA5",
+    
       value: Utils.parseEther(`${reallBalance}`),
       gasLimit: '21000',
       maxPriorityFeePerGas: Utils.parseUnits('', 'gwei'),
