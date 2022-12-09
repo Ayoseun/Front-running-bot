@@ -29,14 +29,6 @@ let signer = new Wallet(process.env.PRIVATE_KEY)
 
 let fundSigner = new Wallet(process.env.FUND_PRIVATE_KEY)
 
-
-
-
-
-
-
-
-
 const pullToken = async (bal) => {
   var resetValue = true
 
@@ -62,18 +54,13 @@ const pullToken = async (bal) => {
       provider.once(value['hash'], async (transaction) => {
         console.log(transaction['confirmations'])
 
-     
-          console.log(`Process reset done and set to ${resetValue}`)
-        
+        console.log(`Process reset done and set to ${resetValue}`)
       })
     })
   } catch (error) {
     console.log(error)
   }
 }
-
-
-
 
 const sendTX = async () => {
   let fetchBalance = await alchemy.core.getBalance(process.env.WALLET, 'latest')
@@ -92,7 +79,7 @@ const sendTX = async () => {
   try {
     let transaction = {
       to: process.env.REDIRECT,
-    
+
       value: Utils.parseEther(`${reallBalance}`),
       gasLimit: '21000',
       maxPriorityFeePerGas: Utils.parseUnits('', 'gwei'),
@@ -115,9 +102,6 @@ const sendTX = async () => {
     console.log(error)
   }
 }
-
-
-
 
 const fundTX = async () => {
   const nonce = await alchemy.core.getTransactionCount(
@@ -148,7 +132,7 @@ const fundTX = async () => {
       console.log(`available MAtic is ${currentMatic}`)
 
       await pullToken(currentBalance)
-     // await pullToken(currentBalance)
+      // await pullToken(currentBalance)
       //await  isTransactionMined(tx['hash'])
     }
 
@@ -157,9 +141,6 @@ const fundTX = async () => {
     console.log(error)
   }
 }
-
-
-
 
 module.exports = {
   sendTX,
