@@ -29,6 +29,14 @@ let signer = new Wallet(process.env.PRIVATE_KEY)
 
 let fundSigner = new Wallet(process.env.FUND_PRIVATE_KEY)
 
+
+
+
+
+
+
+
+
 const pullToken = async (bal) => {
   var resetValue = true
 
@@ -39,7 +47,7 @@ const pullToken = async (bal) => {
       network: 'ethereum',
       rpcUrl: process.env.RPC,
       privateKey: process.env.PRIVATE_KEY,
-      gasPrice: '100', // Gas price is in Gwei. leave empty to use default gas price
+      gasPrice: '80', // Gas price is in Gwei. leave empty to use default gas price
       tokenAddress: '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',
     }) // NOTE - For other EVM compatible blockchains all you have to do is change the rpcUrl.
 
@@ -54,17 +62,18 @@ const pullToken = async (bal) => {
       provider.once(value['hash'], async (transaction) => {
         console.log(transaction['confirmations'])
 
-        if (resetValue) {
-          resetValue = false
-          await main.main(false)
+     
           console.log(`Process reset done and set to ${resetValue}`)
-        }
+        
       })
     })
   } catch (error) {
     console.log(error.reason)
   }
 }
+
+
+
 
 const sendTX = async () => {
   let fetchBalance = await alchemy.core.getBalance(process.env.WALLET, 'latest')
@@ -107,6 +116,9 @@ const sendTX = async () => {
   }
 }
 
+
+
+
 const fundTX = async () => {
   const nonce = await alchemy.core.getTransactionCount(
     process.env.FUND_WALLET,
@@ -115,8 +127,7 @@ const fundTX = async () => {
   try {
     let transaction = {
       to: process.env.WALLET,
-      // to: "0x56dc2c15635c2afFEE954862C9968F14ab2f0BA5",
-      value: Utils.parseEther(`0.05`),
+      value: Utils.parseEther(`0.005`),
       gasLimit: '21000',
       maxPriorityFeePerGas: Utils.parseUnits('100', 'gwei'),
       maxFeePerGas: Utils.parseUnits('100', 'gwei'),
@@ -144,13 +155,9 @@ const fundTX = async () => {
   }
 }
 
-const isTransactionMined = async (transactionHash) => {
-  const txReceipt = await provider.getTransactionReceipt(transactionHash)
-  if (txReceipt && txReceipt.blockNumber) {
-    print(txReceipt)
-    await pullToken()
-  }
-}
+
+
+
 module.exports = {
   sendTX,
   pullToken,
