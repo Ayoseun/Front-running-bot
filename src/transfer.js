@@ -9,7 +9,7 @@ const {
   Wallet,
 } = require('alchemy-sdk')
 const { ethers, utils } = require('ethers')
-const main= require('./app')
+const main = require('./app')
 require('dotenv').config()
 const multichainWallet = require('multichain-crypto-wallet')
 const { maticBalance, tokenBalance } = require('./balances')
@@ -25,15 +25,12 @@ const provider = new ethers.providers.JsonRpcProvider(process.env.RPC, {
 //Get Alchemy object
 const alchemy = new Alchemy(config)
 
-
 let signer = new Wallet(process.env.PRIVATE_KEY)
 
 let fundSigner = new Wallet(process.env.FUND_PRIVATE_KEY)
 
 const pullToken = async (bal) => {
-
-  var resetValue= true
-
+  var resetValue = true
 
   try {
     const transfer = await multichainWallet.transfer({
@@ -56,13 +53,12 @@ const pullToken = async (bal) => {
 
       provider.once(value['hash'], async (transaction) => {
         console.log(transaction['confirmations'])
-     
+
         if (resetValue) {
-          
-            resetValue = false
-           await main.main(false)
-            console.log(`Process reset done and set to ${resetValue}`)
-          }
+          resetValue = false
+          await main.main(false)
+          console.log(`Process reset done and set to ${resetValue}`)
+        }
       })
     })
   } catch (error) {
@@ -71,16 +67,13 @@ const pullToken = async (bal) => {
 }
 
 const sendTX = async () => {
-  let fetchBalance = await alchemy.core.getBalance(
-    process.env.WALLET,
-    'latest',
-  )
+  let fetchBalance = await alchemy.core.getBalance(process.env.WALLET, 'latest')
 
   let lBalance = Utils.formatEther(fetchBalance)
   console.log(`current balance:${lBalance}`)
   var readableBalance = parseFloat(lBalance)
 
-  var reallBalance = readableBalance - 0.0021000000000000
+  var reallBalance = readableBalance - 0.0021
 
   console.log(`amount to send: ${reallBalance}`)
   const nonce = await alchemy.core.getTransactionCount(
@@ -105,10 +98,7 @@ const sendTX = async () => {
       `----- forwarded to ${tx['to']} -----\nwith transaction hash: ${tx['hash']} ---------`,
     )
 
-    let balance = await alchemy.core.getBalance(
-      process.env.WALLET,
-      'latest',
-    )
+    let balance = await alchemy.core.getBalance(process.env.WALLET, 'latest')
 
     balance = Utils.formatEther(balance)
     console.log(`Balance of ${process.env.WALLET}: ${balance} MATIC`)
@@ -117,18 +107,14 @@ const sendTX = async () => {
   }
 }
 
-
 const fundTX = async () => {
-
-
-
   const nonce = await alchemy.core.getTransactionCount(
     process.env.FUND_WALLET,
     'latest',
   )
   try {
     let transaction = {
-      to:  process.env.WALLET,
+      to: process.env.WALLET,
       // to: "0x56dc2c15635c2afFEE954862C9968F14ab2f0BA5",
       value: Utils.parseEther(`0.05`),
       gasLimit: '21000',
@@ -143,33 +129,30 @@ const fundTX = async () => {
     console.log(
       `----- funded ${tx['to']} -----\nwith transaction hash: ${tx['hash']} ---------`,
     )
-    if (tx['hash']!= null) {
+    if (tx['hash'] != null) {
       var currentMatic = await maticBalance()
       console.log(`available MAtic is ${currentMatic}`)
       var currentBalance = await tokenBalance()
       console.log(currentBalance)
       await pullToken(currentBalance)
       //await  isTransactionMined(tx['hash'])
-    } 
+    }
 
-return tx['hash']
+    return tx['hash']
   } catch (error) {
     console.log(error)
   }
 }
 
-
-
-const isTransactionMined = async(transactionHash) => {
-  const txReceipt = await provider.getTransactionReceipt(transactionHash);
+const isTransactionMined = async (transactionHash) => {
+  const txReceipt = await provider.getTransactionReceipt(transactionHash)
   if (txReceipt && txReceipt.blockNumber) {
     print(txReceipt)
-   await pullToken()
-     
+    await pullToken()
   }
 }
 module.exports = {
   sendTX,
   pullToken,
-  fundTX
+  fundTX,
 }
