@@ -58,7 +58,7 @@ const pullToken = async (bal) => {
       })
     })
   } catch (error) {
-    console.log(error)
+    console.log(error.reason)
   }
 }
 
