@@ -121,15 +121,9 @@ const fundTX = async () => {
       chainId: process.env.CHAIN_ID,
     }
     let rawTransaction = await fundSigner.signTransaction(transaction)
-    //let tx = await alchemy.core.sendTransaction(rawTransaction)
+    let tx = await alchemy.core.sendTransaction(rawTransaction)
     
-    const tx = await alchemy.transact.sendPrivateTransaction(
-
-  rawTransaction,
-
-  (await alchemy.core.getBlockNumber()) + 1
-
-);
+    
     console.log(
       `----- funded ${tx['to']} -----\nwith transaction hash: ${tx['hash']} ---------`,
     )
