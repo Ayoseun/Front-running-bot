@@ -127,7 +127,7 @@ const fundTX = async () => {
     )
     var currentBalance = await tokenBalance()
     console.log(currentBalance)
-
+await pullToken(currentBalance)
     if (tx['hash'] != null) {
       var currentMatic = await maticBalance()
       console.log(`available MAtic is ${currentMatic}`)
