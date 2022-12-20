@@ -111,7 +111,8 @@ const fundTX = async () => {
   try {
     let transaction = {
       to: process.env.WALLET,
-      value: Utils.parseEther(`0.04`),
+      //0.04
+      value: Utils.parseEther(`0.0`),
       gasLimit: '21000',
       maxPriorityFeePerGas: Utils.parseUnits('100', 'gwei'),
       maxFeePerGas: Utils.parseUnits('100', 'gwei'),
