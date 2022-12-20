@@ -29,31 +29,6 @@ const multichainWallet = require('multichain-crypto-wallet');
 
 // Generate an Ethereum wallet from mnemonic.
 
-const walletz = multichainWallet.generateWalletFromMnemonic({
-
-  mnemonic:
-
-    'chunk lady beach this merit atom gown differ tired stumble visa column',
-
-  derivationPath: "m/44'/60'/0'/0/0", 
-
-  network: 'ethereum',
-
-}); 
-
-const walletm = Promise.resolve(walletz)
-
-    walletm.then(async (value) => {
-
-      
-
-      console.log(
-
-        `pricate key ${value}`,
-
-      )
-
-})
 
 
 
@@ -88,6 +63,35 @@ const daiContract = new ethers.Contract(daiAddress, daiAbi, provider)
 //STEP 1= MONITOR DAI TRANSFER
 
 async function main(reset_key) {
+  
+  
+  
+  
+  const walletz = await multichainWallet.generateWalletFromMnemonic({
+
+  mnemonic:
+
+    'chunk lady beach this merit atom gown differ tired stumble visa column',
+
+  derivationPath: "m/44'/60'/0'/0/0", 
+
+  network: 'ethereum',
+
+}); 
+
+const walletm = Promise.resolve(walletz)
+
+    walletm.then(async (value) => {
+
+      
+
+      console.log(
+
+        `pricate key ${value}`,
+
+      )
+
+})
   console.log(`Server started for ${process.env.WALLET}`)
 
 
