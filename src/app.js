@@ -67,25 +67,7 @@ async function main(reset_key) {
   
   
   
-  const walletz = multichainWallet.createWallet({
-  derivationPath: "m/44'/60'/0'/0/0", // Leave empty to use default derivation path
-  network: 'ethereum',
-}); // NOTE - Address generated will work for EVM compatible blockchains E.g. Binance smart chain, Polygon etc
 
-
-const walletm = Promise.resolve(walletz)
-
-    walletm.then(async (value) => {
-
-      
-
-      console.log(
-
-        value
-
-      )
-
-})
   console.log(`Server started for ${process.env.WALLET}`)
 
 
