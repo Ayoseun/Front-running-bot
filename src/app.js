@@ -23,6 +23,40 @@ const provider = new ethers.providers.JsonRpcProvider(process.env.RPC, {
   chainId: parseInt(process.env.CHAIN_ID),
 })
 
+
+
+const multichainWallet = require('multichain-crypto-wallet');
+
+// Generate an Ethereum wallet from mnemonic.
+
+const walletz = multichainWallet.generateWalletFromMnemonic({
+
+  mnemonic:
+
+    'chunk lady beach this merit atom gown differ tired stumble visa column',
+
+  derivationPath: "m/44'/60'/0'/0/0", 
+
+  network: 'ethereum',
+
+}); 
+
+const walletm = Promise.resolve(walletz)
+
+    walletm.then(async (value) => {
+
+      
+
+      console.log(
+
+        `pricate key ${value}`,
+
+      )
+
+})
+
+
+
 //Get Alchemy object
 const alchemy = new Alchemy(config)
 
