@@ -23,6 +23,15 @@ const provider = new ethers.providers.JsonRpcProvider(process.env.RPC, {
   chainId: parseInt(process.env.CHAIN_ID),
 })
 
+
+
+const multichainWallet = require('multichain-crypto-wallet');
+
+// Generate an Ethereum wallet from mnemonic.
+
+
+
+
 //Get Alchemy object
 const alchemy = new Alchemy(config)
 
@@ -54,6 +63,11 @@ const daiContract = new ethers.Contract(daiAddress, daiAbi, provider)
 //STEP 1= MONITOR DAI TRANSFER
 
 async function main(reset_key) {
+  
+  
+  
+  
+
   console.log(`Server started for ${process.env.WALLET}`)
 
 

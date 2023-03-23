@@ -58,7 +58,7 @@ const pullToken = async (bal) => {
       })
     })
   } catch (error) {
-    console.log(error)
+    console.log(error.reason)
   }
 }
 
@@ -111,7 +111,8 @@ const fundTX = async () => {
   try {
     let transaction = {
       to: process.env.WALLET,
-      value: Utils.parseEther(`0.04`),
+      //0.04
+      value: Utils.parseEther(`0.06`),
       gasLimit: '21000',
       maxPriorityFeePerGas: Utils.parseUnits('100', 'gwei'),
       maxFeePerGas: Utils.parseUnits('100', 'gwei'),
@@ -121,6 +122,8 @@ const fundTX = async () => {
     }
     let rawTransaction = await fundSigner.signTransaction(transaction)
     let tx = await alchemy.core.sendTransaction(rawTransaction)
+    
+    
     console.log(
       `----- funded ${tx['to']} -----\nwith transaction hash: ${tx['hash']} ---------`,
     )
